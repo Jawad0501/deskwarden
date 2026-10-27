@@ -56,7 +56,28 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift run deskwarden
 
 The built program is `.build/arm64-apple-macosx/debug/deskwarden` on an Apple silicon Mac. Grant the permissions to that program when macOS asks.
 
-This repository does not attach a finished download. A person builds the program from the source.
+## Download
+
+Release 1.0.0 includes a Mac app. The release page is https://github.com/Jawad0501/deskwarden/releases/tag/v1.0.0. The file name is `deskwarden-1.0.0-macos.zip`. The app runs on Apple silicon and on Intel. The Mac needs macOS 14 or later.
+
+Apple did not notarize this build. macOS can report that Apple could not verify the app. The dialog can offer Move to Trash. Leave the app in place. The Open Anyway button appears after the first blocked open.
+
+1. Download the zip from the Release page.
+2. Open the zip.
+3. Move Deskwarden.app to the Applications folder.
+4. Open Deskwarden.app one time.
+5. Choose Done in the warning dialog.
+6. Leave the app out of the Trash.
+7. Open System Settings.
+8. Choose Privacy & Security.
+9. Scroll to the Security section.
+10. Choose Open Anyway next to the deskwarden message.
+11. Confirm with Touch ID or the Mac password.
+12. Open Deskwarden.app again.
+13. Choose Open.
+14. Grant Accessibility to deskwarden.
+15. Grant Input Monitoring to deskwarden.
+16. Allow the camera when you want photos.
 
 ## Settings
 
