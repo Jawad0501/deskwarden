@@ -1,0 +1,5 @@
+docs/
+AGENTS.md
+CLAUDE.md
+.build/
+.swiftpm/
