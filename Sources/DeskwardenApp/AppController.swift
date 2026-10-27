@@ -54,6 +54,7 @@ final class AppController: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         promptForAccessibility()
+        showSetupNotice()
         installStatusItem()
         armDesk()
         installEventTap()
@@ -131,6 +132,22 @@ final class AppController: NSObject, NSApplicationDelegate {
         let key = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String
         let options = [key: true] as CFDictionary
         AXIsProcessTrustedWithOptions(options)
+    }
+
+    private func showSetupNotice() {
+        if AXIsProcessTrusted() == false {
+            guard let notice = setupNotice(accessibilityTrusted: false) else {
+                return
+            }
+            let alert = NSAlert()
+            alert.messageText = notice.message
+            alert.addButton(withTitle: notice.buttonTitle)
+            alert.addButton(withTitle: "Later")
+            NSApp.activate()
+            if alert.runModal() == .alertFirstButtonReturn {
+                NSWorkspace.shared.open(notice.settingsURL)
+            }
+        }
     }
 
     private func installEventTap() {

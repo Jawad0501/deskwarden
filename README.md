@@ -1,30 +1,34 @@
 # deskwarden
 
-deskwarden is a macOS menu-bar program. It keeps the Mac awake for a live remote session. An armed desk covers every display after a physical touch. The owner removes the cover with Touch ID or the Mac password.
+deskwarden is a macOS menu-bar program. It keeps a Mac awake. Agents can keep working. An armed desk covers every display after a physical touch. The owner removes the cover with Touch ID or the Mac password.
 
-The program is for a person who runs coding agents and watches them through RustDesk. RustDesk needs an unlocked session. RustDesk needs a display that stays on.
+## How it helps
+
+Agents can run for a long time. Sleep can stop that work. A person at the desk can see the screen.
+
+The program holds the display awake. The program holds the system awake. The cover hides the screen after a physical touch. The owner unlocks the Mac. The agents can continue.
 
 ## What the program does
 
-The program holds the display awake. The program holds the system awake.
+A hardware key, click, scroll, or pointer move covers the displays. The grace period is 3 seconds after Arm. The program swallows the first hardware event.
 
-A hardware key, click, scroll, or pointer move covers the displays. The grace period is 3 seconds after Arm. The first hardware event is swallowed.
-
-Input with a source process ID other than 0 stays on the real desktop. That test is for RustDesk and for agent input. A real RustDesk session has not proven this test yet.
+A source process ID of 0 means a hardware touch. Any other source process ID stays on the desktop. This rule still needs a live check.
 
 The owner can play an alarm for 5 seconds. The owner can save one photo on this Mac. The owner can change the two lines on the cover.
 
+When Accessibility is off, the program shows a setup notice. The button Open System Settings opens Privacy and Security.
+
 ## What the program does not do
 
-The program does not use the network. The program does not log keystrokes. The program does not send telemetry. The program does not talk to RustDesk.
+The program does not use the network. The program does not log keystrokes. The program does not send telemetry.
 
-The program does not hide the camera light. The light stays on while Take a photo is enabled. Take a photo off stops the camera, so the light stays off.
+The program does not hide the camera light. The light stays on while Take a photo is enabled. Take a photo off stops the camera. The light then stays off.
 
 ## Soft lock
 
 The cover is a soft lock. A reboot can bypass the cover. The power button can bypass the cover. Secure Input can bypass the cover.
 
-Keep FileVault on. Keep a login password on. Use a strong RustDesk password. Use 2FA on the RustDesk account.
+Keep FileVault on. Keep a login password on.
 
 A later hardware key can still reach an app under the cover. A lid close sleeps the Mac. An attached external display is the exception.
 
@@ -32,7 +36,7 @@ A later hardware key can still reach an app under the cover. A lid close sleeps 
 
 Accessibility lets the event tap run. Input Monitoring lets the program receive keyboard events. Camera permission applies only when Take a photo is on.
 
-Screen Recording belongs to RustDesk. This program does not request Screen Recording.
+The program does not request Screen Recording.
 
 ## Requirements
 
@@ -58,7 +62,7 @@ The built program is `.build/arm64-apple-macosx/debug/deskwarden` on an Apple si
 
 ## Download
 
-Release 1.0.0 includes a Mac app. The release page is https://github.com/Jawad0501/deskwarden/releases/tag/v1.0.0. The file name is `deskwarden-1.0.0-macos.zip`. The app runs on Apple silicon and on Intel. The Mac needs macOS 14 or later.
+Release 1.1.0 includes a Mac app. The release page is https://github.com/Jawad0501/deskwarden/releases/tag/v1.1.0. The file name is `deskwarden-1.1.0-macos.zip`. The app runs on Apple silicon and on Intel. The Mac needs macOS 14 or later.
 
 Apple did not notarize this build. macOS can report that Apple could not verify the app. The dialog can offer Move to Trash. Leave the app in place. The Open Anyway button appears after the first blocked open.
 
@@ -75,9 +79,10 @@ Apple did not notarize this build. macOS can report that Apple could not verify 
 11. Confirm with Touch ID or the Mac password.
 12. Open Deskwarden.app again.
 13. Choose Open.
-14. Grant Accessibility to deskwarden.
-15. Grant Input Monitoring to deskwarden.
-16. Allow the camera when you want photos.
+14. If a setup notice appears, choose Open System Settings.
+15. Grant Accessibility to deskwarden.
+16. Grant Input Monitoring to deskwarden.
+17. Allow the camera when you want photos.
 
 ## Settings
 
@@ -85,7 +90,7 @@ Apple did not notarize this build. macOS can report that Apple could not verify 
 2. Set the alarm, the photo, and the two lines.
 3. Choose Save.
 
-The default lines are "The authorized person is out." and "Please wait." Choose Show captures to open the photo folder. The folder is `~/Library/Application Support/deskwarden/captures`.
+The default lines are "The authorized person is out." and "Please wait." Show captures opens the photo folder. The folder is `~/Library/Application Support/deskwarden/captures`.
 
 ## License
 
