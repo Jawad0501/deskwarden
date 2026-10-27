@@ -178,7 +178,25 @@ final class AppController: NSObject, NSApplicationDelegate {
         }
     }
 
-    fileprivate func receive(event: HardwareEvent, unixProcessID: Int) -> Bool {
+    fileprivate func receive(
+        event: HardwareEvent,
+        keyboardCommand: KeyboardCommand?,
+        unixProcessID: Int
+    ) -> Bool {
+        if let keyboardCommand {
+            let commandDecision = session.receiveLockScreenCommand(
+                keyCode: keyboardCommand.keyCode,
+                control: keyboardCommand.control,
+                command: keyboardCommand.command,
+                option: keyboardCommand.option,
+                shift: keyboardCommand.shift,
+                unixProcessID: unixProcessID
+            )
+            if commandDecision.swallow {
+                showMode()
+                return true
+            }
+        }
         let decision = session.receive(eventKind: eventKind(for: event), unixProcessID: unixProcessID)
         showMode()
         return decision.swallow
@@ -264,6 +282,34 @@ private func hardwareEvent(for type: CGEventType) -> HardwareEvent? {
     }
 }
 
+private struct KeyboardCommand: Sendable {
+    let keyCode: Int64
+    let control: Bool
+    let command: Bool
+    let option: Bool
+    let shift: Bool
+}
+
+private func keyboardCommand(for type: CGEventType, cgEvent: CGEvent) -> KeyboardCommand? {
+    switch type {
+    case .keyDown, .keyUp:
+        let flags = cgEvent.flags
+        return KeyboardCommand(
+            keyCode: cgEvent.getIntegerValueField(.keyboardEventKeycode),
+            control: flags.contains(.maskControl),
+            command: flags.contains(.maskCommand),
+            option: flags.contains(.maskAlternate),
+            shift: flags.contains(.maskShift)
+        )
+    case .flagsChanged, .mouseMoved, .leftMouseDown, .leftMouseUp, .leftMouseDragged, .rightMouseDown,
+        .rightMouseUp, .rightMouseDragged, .otherMouseDown, .otherMouseUp, .otherMouseDragged, .scrollWheel, .null,
+        .tabletPointer, .tabletProximity, .tapDisabledByTimeout, .tapDisabledByUserInput:
+        return nil
+    @unknown default:
+        return nil
+    }
+}
+
 private func eventTapCallback(
     _ proxy: CGEventTapProxy,
     _ type: CGEventType,
@@ -284,8 +330,13 @@ private func eventTapCallback(
         return Unmanaged.passUnretained(event)
     }
     let unixProcessID = Int(event.getIntegerValueField(.eventSourceUnixProcessID))
+    let keyboardCommand = keyboardCommand(for: type, cgEvent: event)
     let swallow = MainActor.assumeIsolated { () -> Bool in
-        controller(at: bits)?.receive(event: inputEvent, unixProcessID: unixProcessID) ?? false
+        controller(at: bits)?.receive(
+            event: inputEvent,
+            keyboardCommand: keyboardCommand,
+            unixProcessID: unixProcessID
+        ) ?? false
     }
     if swallow {
         return nil

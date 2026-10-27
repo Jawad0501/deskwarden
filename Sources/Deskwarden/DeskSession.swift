@@ -141,12 +141,42 @@ public final class DeskSession {
     }
 
     public func receive(eventKind: EventKind, unixProcessID: Int) -> InputDecision {
-        let decision = inputDecision(
-            mode: mode,
-            secondsSinceArm: clock.secondsSinceArm(),
-            eventKind: eventKind,
-            unixProcessID: unixProcessID
+        return applyDecision(
+            inputDecision(
+                mode: mode,
+                secondsSinceArm: clock.secondsSinceArm(),
+                eventKind: eventKind,
+                unixProcessID: unixProcessID
+            )
         )
+    }
+
+    public func receiveLockScreenCommand(
+        keyCode: Int64,
+        control: Bool,
+        command: Bool,
+        option: Bool,
+        shift: Bool,
+        unixProcessID: Int
+    ) -> InputDecision {
+        let lockChord = keyCode == 12 && control && command && !option && !shift && unixProcessID == 0
+        switch mode {
+        case .armed:
+            if lockChord {
+                return applyDecision(InputDecision(mode: .locked, swallow: true))
+            }
+            return InputDecision(mode: mode, swallow: false)
+        case .locked:
+            if lockChord {
+                return InputDecision(mode: .locked, swallow: true)
+            }
+            return InputDecision(mode: mode, swallow: false)
+        case .disarmed:
+            return InputDecision(mode: mode, swallow: false)
+        }
+    }
+
+    private func applyDecision(_ decision: InputDecision) -> InputDecision {
         let wasLocked = mode == .locked
         mode = decision.mode
         if mode == .locked && !wasLocked {

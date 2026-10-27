@@ -12,6 +12,8 @@ The program holds the display awake. The program holds the system awake. The cov
 
 A hardware key, click, scroll, or pointer move covers the displays. The grace period is 3 seconds after Arm. The program swallows the first hardware event.
 
+While the desk is armed, Control-Command-Q shows the cover. After Disarm, that command locks the screen.
+
 A source process ID of 0 means a hardware touch. Any other source process ID stays on the desktop. This rule still needs a live check.
 
 The owner can play an alarm for 5 seconds. The owner can save one photo on this Mac. The owner can change the two lines on the cover.
@@ -26,7 +28,7 @@ The program does not hide the camera light. The light stays on while Take a phot
 
 ## Soft lock
 
-The cover is a soft lock. A reboot can bypass the cover. The power button can bypass the cover. Secure Input can bypass the cover.
+The cover is a soft lock. A reboot can bypass the cover. The power button can bypass the cover. Secure Input can bypass the cover. A click on Lock Screen or Shut Down still reaches macOS.
 
 Keep FileVault on. Keep a login password on.
 
@@ -62,7 +64,7 @@ The built program is `.build/arm64-apple-macosx/debug/deskwarden` on an Apple si
 
 ## Download
 
-Release 1.1.0 includes a Mac app. The release page is https://github.com/Jawad0501/deskwarden/releases/tag/v1.1.0. The file name is `deskwarden-1.1.0-macos.zip`. The app runs on Apple silicon and on Intel. The Mac needs macOS 14 or later.
+Release 1.2.0 includes a Mac app. The release page is https://github.com/Jawad0501/deskwarden/releases/tag/v1.2.0. The file name is `deskwarden-1.2.0-macos.zip`. The app runs on Apple silicon and on Intel. The Mac needs macOS 14 or later.
 
 Apple did not notarize this build. macOS can report that Apple could not verify the app. The dialog can offer Move to Trash. Leave the app in place. The Open Anyway button appears after the first blocked open.
 
