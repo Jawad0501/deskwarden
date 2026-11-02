@@ -10,7 +10,9 @@ The program holds the display awake. The program holds the system awake. The cov
 
 ## What the program does
 
-A hardware key, click, scroll, or pointer move covers the displays. The grace period is 3 seconds after Arm. The program swallows the first hardware event.
+A hardware key, click, scroll, pointer move, or trackpad swipe covers the displays. The grace period is 3 seconds after Arm. The program swallows the first hardware event.
+
+While the cover is up, a trackpad swipe does not change windows. The swipe that moves between windows is included.
 
 While the desk is armed, Control-Command-Q shows the cover. After Disarm, that command locks the screen.
 
@@ -42,29 +44,11 @@ The program does not request Screen Recording.
 
 ## Requirements
 
-The Mac needs macOS 14 or later. The Mac needs Xcode. Command Line Tools alone cannot build the tests.
-
-## Run the program
-
-1. Clone this repository.
-2. Open Terminal in the project folder.
-3. Run the command below.
-4. Grant Accessibility to the deskwarden program.
-5. Grant Input Monitoring to the same program.
-6. Allow the camera if you want photos.
-7. Run the command again.
-8. Choose Disarm before you type.
-9. Choose Arm before you leave the Mac.
-
-```
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift run deskwarden
-```
-
-The built program is `.build/arm64-apple-macosx/debug/deskwarden` on an Apple silicon Mac. Grant the permissions to that program when macOS asks.
+The Mac needs macOS 14 or later. The app runs on Apple silicon and on Intel.
 
 ## Download
 
-Release 1.2.0 includes a Mac app. The release page is https://github.com/Jawad0501/deskwarden/releases/tag/v1.2.0. The file name is `deskwarden-1.2.0-macos.zip`. The app runs on Apple silicon and on Intel. The Mac needs macOS 14 or later.
+Release 1.3.0 includes a Mac app. The release page is https://github.com/Jawad0501/deskwarden/releases/tag/v1.3.0. The file name is `deskwarden-1.3.0-macos.zip`.
 
 Apple did not notarize this build. macOS can report that Apple could not verify the app. The dialog can offer Move to Trash. Leave the app in place. The Open Anyway button appears after the first blocked open.
 
@@ -85,6 +69,8 @@ Apple did not notarize this build. macOS can report that Apple could not verify 
 15. Grant Accessibility to deskwarden.
 16. Grant Input Monitoring to deskwarden.
 17. Allow the camera when you want photos.
+18. Choose Disarm before you type.
+19. Choose Arm before you leave the Mac.
 
 ## Settings
 
@@ -93,6 +79,38 @@ Apple did not notarize this build. macOS can report that Apple could not verify 
 3. Choose Save.
 
 The default lines are "The authorized person is out." and "Please wait." Show captures opens the photo folder. The folder is `~/Library/Application Support/deskwarden/captures`.
+
+## About
+
+1. Choose About in the menu.
+2. Read the version and the credits.
+3. Choose Check for Updates.
+
+Check for Updates opens the release page in the browser. The page shows the newest release and the notes. The program sends no request.
+
+## Changelog
+
+The notes for each release are in `CHANGELOG.md`. Release 1.3.0 adds the trackpad cover and the About window.
+
+## Build from source
+
+A source build needs Xcode. Command Line Tools alone cannot build the tests.
+
+1. Clone this repository.
+2. Open Terminal in the project folder.
+3. Run the command below.
+4. Grant Accessibility to the deskwarden program.
+5. Grant Input Monitoring to the same program.
+6. Allow the camera if you want photos.
+7. Run the command again.
+8. Choose Disarm before you type.
+9. Choose Arm before you leave the Mac.
+
+```
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift run deskwarden
+```
+
+The built program is `.build/arm64-apple-macosx/debug/deskwarden` on an Apple silicon Mac. Grant the permissions to that program when macOS asks.
 
 ## License
 

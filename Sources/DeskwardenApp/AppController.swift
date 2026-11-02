@@ -15,6 +15,7 @@ final class AppController: NSObject, NSApplicationDelegate {
     private let authenticator: OwnerAuthenticator
     private let session: DeskSession
     private var settingsWindow: SettingsWindow?
+    private var aboutWindow: AboutWindow?
     private var statusItem: NSStatusItem?
     private var eventTap: CFMachPort?
     private var eventTapSource: CFRunLoopSource?
@@ -92,6 +93,13 @@ final class AppController: NSObject, NSApplicationDelegate {
         settingsWindow?.show()
     }
 
+    @objc private func showAbout(_ sender: Any?) {
+        if aboutWindow == nil {
+            aboutWindow = AboutWindow()
+        }
+        aboutWindow?.show()
+    }
+
     @objc private func quit(_ sender: Any?) {
         NSApp.terminate(nil)
     }
@@ -103,6 +111,7 @@ final class AppController: NSObject, NSApplicationDelegate {
         menu.addItem(menuItem("Disarm", #selector(disarmFromMenu(_:))))
         menu.addItem(menuItem("Show captures", #selector(showCaptures(_:))))
         menu.addItem(menuItem("Settings", #selector(showSettings(_:))))
+        menu.addItem(menuItem("About", #selector(showAbout(_:))))
         menu.addItem(menuItem("Quit", #selector(quit(_:))))
         item.menu = menu
         statusItem = item
@@ -206,80 +215,10 @@ final class AppController: NSObject, NSApplicationDelegate {
 private func hardwareEventMask() -> CGEventMask {
     var mask: CGEventMask = 0
     for event in HardwareEvent.allCases {
-        let type = cgEventType(for: event)
-        mask |= CGEventMask(1) << CGEventMask(type.rawValue)
+        let rawValue = eventTypeRawValue(for: event)
+        mask |= CGEventMask(1) << CGEventMask(rawValue)
     }
     return mask
-}
-
-private func cgEventType(for event: HardwareEvent) -> CGEventType {
-    switch event {
-    case .keyDown:
-        return .keyDown
-    case .keyUp:
-        return .keyUp
-    case .flagsChanged:
-        return .flagsChanged
-    case .mouseMoved:
-        return .mouseMoved
-    case .leftMouseDown:
-        return .leftMouseDown
-    case .leftMouseUp:
-        return .leftMouseUp
-    case .leftMouseDragged:
-        return .leftMouseDragged
-    case .rightMouseDown:
-        return .rightMouseDown
-    case .rightMouseUp:
-        return .rightMouseUp
-    case .rightMouseDragged:
-        return .rightMouseDragged
-    case .otherMouseDown:
-        return .otherMouseDown
-    case .otherMouseUp:
-        return .otherMouseUp
-    case .otherMouseDragged:
-        return .otherMouseDragged
-    case .scrollWheel:
-        return .scrollWheel
-    }
-}
-
-private func hardwareEvent(for type: CGEventType) -> HardwareEvent? {
-    switch type {
-    case .keyDown:
-        return .keyDown
-    case .keyUp:
-        return .keyUp
-    case .flagsChanged:
-        return .flagsChanged
-    case .mouseMoved:
-        return .mouseMoved
-    case .leftMouseDown:
-        return .leftMouseDown
-    case .leftMouseUp:
-        return .leftMouseUp
-    case .leftMouseDragged:
-        return .leftMouseDragged
-    case .rightMouseDown:
-        return .rightMouseDown
-    case .rightMouseUp:
-        return .rightMouseUp
-    case .rightMouseDragged:
-        return .rightMouseDragged
-    case .otherMouseDown:
-        return .otherMouseDown
-    case .otherMouseUp:
-        return .otherMouseUp
-    case .otherMouseDragged:
-        return .otherMouseDragged
-    case .scrollWheel:
-        return .scrollWheel
-    case .null, .tabletPointer, .tabletProximity, .tapDisabledByTimeout, .tapDisabledByUserInput:
-        return nil
-    @unknown default:
-        return nil
-    }
 }
 
 private struct KeyboardCommand: Sendable {
@@ -326,7 +265,9 @@ private func eventTapCallback(
         }
         return Unmanaged.passUnretained(event)
     }
-    guard let inputEvent = hardwareEvent(for: type) else {
+    let routedField = unsafeBitCast(UInt32(55), to: CGEventField.self)
+    let routedRawValue = UInt32(truncatingIfNeeded: event.getIntegerValueField(routedField))
+    guard let inputEvent = hardwareEvent(callbackRawValue: type.rawValue, routedRawValue: routedRawValue) else {
         return Unmanaged.passUnretained(event)
     }
     let unixProcessID = Int(event.getIntegerValueField(.eventSourceUnixProcessID))
