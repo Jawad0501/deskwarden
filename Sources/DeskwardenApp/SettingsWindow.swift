@@ -8,6 +8,7 @@ final class SettingsWindow: NSObject {
     private let window: NSWindow
     private let alarmCheckbox: NSButton
     private let photoCheckbox: NSButton
+    private let blurCheckbox: NSButton
     private let titleField: NSTextField
     private let detailField: NSTextField
 
@@ -16,10 +17,11 @@ final class SettingsWindow: NSObject {
         self.onSave = onSave
         alarmCheckbox = NSButton(checkboxWithTitle: "Play the alarm", target: nil, action: nil)
         photoCheckbox = NSButton(checkboxWithTitle: "Take a photo", target: nil, action: nil)
+        blurCheckbox = NSButton(checkboxWithTitle: "Use protective screen blur", target: nil, action: nil)
         titleField = NSTextField(string: "")
         detailField = NSTextField(string: "")
         window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 400, height: 260),
+            contentRect: NSRect(x: 0, y: 0, width: 400, height: 300),
             styleMask: [.titled, .closable],
             backing: .buffered,
             defer: false
@@ -35,6 +37,7 @@ final class SettingsWindow: NSObject {
     func show() {
         alarmCheckbox.state = choices.soundEnabled ? .on : .off
         photoCheckbox.state = choices.photoEnabled ? .on : .off
+        blurCheckbox.state = choices.protectiveBlurEnabled ? .on : .off
         titleField.stringValue = choices.coverTitle
         detailField.stringValue = choices.coverDetail
         window.center()
@@ -53,6 +56,7 @@ final class SettingsWindow: NSObject {
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.addArrangedSubview(alarmCheckbox)
         stack.addArrangedSubview(photoCheckbox)
+        stack.addArrangedSubview(blurCheckbox)
         stack.addArrangedSubview(label("First line"))
         stack.addArrangedSubview(titleField)
         stack.addArrangedSubview(label("Second line"))
@@ -78,8 +82,10 @@ final class SettingsWindow: NSObject {
     @objc private func save(_ sender: Any?) {
         choices.soundEnabled = alarmCheckbox.state == .on
         choices.photoEnabled = photoCheckbox.state == .on
+        choices.protectiveBlurEnabled = blurCheckbox.state == .on
         choices.coverTitle = titleField.stringValue
         choices.coverDetail = detailField.stringValue
         onSave()
+        window.close()
     }
 }

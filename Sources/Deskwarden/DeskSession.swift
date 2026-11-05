@@ -6,6 +6,9 @@ public protocol DeskOverlay: AnyObject {
     func cover(title: String, detail: String)
     func uncover()
     var isCovered: Bool { get }
+    func showProtectiveBlur()
+    func hideProtectiveBlur()
+    var isBlurred: Bool { get }
 }
 
 public protocol DeskChoices: AnyObject {
@@ -13,6 +16,7 @@ public protocol DeskChoices: AnyObject {
     var photoEnabled: Bool { get set }
     var coverTitle: String { get set }
     var coverDetail: String { get set }
+    var protectiveBlurEnabled: Bool { get set }
 }
 
 public protocol DeskPower: AnyObject {
@@ -74,12 +78,14 @@ public final class StandardChoices: DeskChoices {
     public var photoEnabled: Bool
     public var coverTitle: String
     public var coverDetail: String
+    public var protectiveBlurEnabled: Bool
 
     public init() {
         soundEnabled = true
         photoEnabled = true
         coverTitle = StandardChoices.defaultCoverTitle
         coverDetail = StandardChoices.defaultCoverDetail
+        protectiveBlurEnabled = false
     }
 }
 
@@ -119,6 +125,7 @@ public final class DeskSession {
         if choices.photoEnabled {
             camera.becomeReady()
         }
+        applyProtectiveBlur()
     }
 
     public func applyChoices() {
@@ -131,12 +138,17 @@ public final class DeskSession {
         if choices.photoEnabled && mode == .armed {
             camera.becomeReady()
         }
+        guard mode == .armed else {
+            return
+        }
+        applyProtectiveBlur()
     }
 
     public func disarm() {
         mode = .disarmed
         alarm.stop()
         camera.rest()
+        overlay.hideProtectiveBlur()
         overlay.uncover()
     }
 
@@ -180,6 +192,7 @@ public final class DeskSession {
         let wasLocked = mode == .locked
         mode = decision.mode
         if mode == .locked && !wasLocked {
+            overlay.hideProtectiveBlur()
             overlay.cover(
                 title: shownLine(choices.coverTitle, fallback: StandardChoices.defaultCoverTitle),
                 detail: shownLine(choices.coverDetail, fallback: StandardChoices.defaultCoverDetail)
@@ -202,7 +215,16 @@ public final class DeskSession {
             self.mode = .disarmed
             self.alarm.stop()
             self.camera.rest()
+            self.overlay.hideProtectiveBlur()
             self.overlay.uncover()
+        }
+    }
+
+    private func applyProtectiveBlur() {
+        if choices.protectiveBlurEnabled {
+            overlay.showProtectiveBlur()
+        } else {
+            overlay.hideProtectiveBlur()
         }
     }
 

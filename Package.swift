@@ -41,7 +41,7 @@ let package = Package(
         ),
         .testTarget(
             name: "DeskwardenTests",
-            dependencies: ["Deskwarden"]
+            dependencies: ["Deskwarden", "DeskwardenApp"]
         )
     ]
 )

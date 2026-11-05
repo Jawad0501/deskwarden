@@ -12,6 +12,8 @@ The program holds the display awake. The program holds the system awake. The cov
 
 A hardware key, click, scroll, pointer move, or trackpad swipe covers the displays. The grace period is 3 seconds after Arm. The program swallows the first hardware event.
 
+Arm can show a frost when Use protective screen blur is on. A click or a pointer move still shows the cover.
+
 While the cover is up, a trackpad swipe does not change windows. The swipe that moves between windows is included.
 
 While the desk is armed, Control-Command-Q shows the cover. After Disarm, that command locks the screen.
@@ -48,7 +50,7 @@ The Mac needs macOS 14 or later. The app runs on Apple silicon and on Intel.
 
 ## Download
 
-Release 1.3.0 includes a Mac app. The release page is https://github.com/Jawad0501/deskwarden/releases/tag/v1.3.0. The file name is `deskwarden-1.3.0-macos.zip`.
+Release 1.4.0 includes a Mac app. The release page is https://github.com/Jawad0501/deskwarden/releases/tag/v1.4.0. The file name is `deskwarden-1.4.0-macos.zip`.
 
 Apple did not notarize this build. macOS can report that Apple could not verify the app. The dialog can offer Move to Trash. Leave the app in place. The Open Anyway button appears after the first blocked open.
 
@@ -75,10 +77,10 @@ Apple did not notarize this build. macOS can report that Apple could not verify 
 ## Settings
 
 1. Choose Settings in the menu.
-2. Set the alarm, the photo, and the two lines.
+2. Set the alarm, the photo, the "Use protective screen blur" checkbox, and the two lines.
 3. Choose Save.
 
-The default lines are "The authorized person is out." and "Please wait." Show captures opens the photo folder. The folder is `~/Library/Application Support/deskwarden/captures`.
+Save stores the choices and closes the window. The blur choice starts off. The default lines are "The authorized person is out." and "Please wait." Show captures opens the photo folder. The folder is `~/Library/Application Support/deskwarden/captures`.
 
 ## About
 
@@ -90,7 +92,7 @@ Check for Updates opens the release page in the browser. The page shows the newe
 
 ## Changelog
 
-The notes for each release are in `CHANGELOG.md`. Release 1.3.0 adds the trackpad cover and the About window.
+The notes for each release are in `CHANGELOG.md`. Release 1.4.0 adds the protective screen blur.
 
 ## Build from source
 

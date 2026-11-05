@@ -9,6 +9,7 @@ private struct FakeClock: DeskClock {
 
 private final class FakeOverlay: DeskOverlay {
     private(set) var isCovered = false
+    private(set) var isBlurred = false
     private(set) var shownTitle = ""
     private(set) var shownDetail = ""
 
@@ -20,6 +21,14 @@ private final class FakeOverlay: DeskOverlay {
 
     func uncover() {
         isCovered = false
+    }
+
+    func showProtectiveBlur() {
+        isBlurred = true
+    }
+
+    func hideProtectiveBlur() {
+        isBlurred = false
     }
 }
 
@@ -76,6 +85,7 @@ private final class FakeChoices: DeskChoices {
     var photoEnabled: Bool
     var coverTitle: String
     var coverDetail: String
+    var protectiveBlurEnabled = false
 
     init(soundEnabled: Bool, photoEnabled: Bool, coverTitle: String, coverDetail: String) {
         self.soundEnabled = soundEnabled

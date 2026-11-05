@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0
+
+Settings has a checkbox named Use protective screen blur. The choice starts off. Arm with the choice on shows a frost on every display. A click or a pointer move still shows the cover.
+
+Save stores the choices and closes the Settings window.
+
 ## 1.3.0
 
 A trackpad swipe covers an armed desk. While the cover is up, a swipe does not change windows. The swipe that moves between windows is included.

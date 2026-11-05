@@ -28,6 +28,16 @@ final class StoredChoices: DeskChoices {
         set { defaults.set(newValue, forKey: Key.coverDetail) }
     }
 
+    var protectiveBlurEnabled: Bool {
+        get {
+            guard defaults.object(forKey: Key.protectiveBlurEnabled) != nil else {
+                return false
+            }
+            return defaults.bool(forKey: Key.protectiveBlurEnabled)
+        }
+        set { defaults.set(newValue, forKey: Key.protectiveBlurEnabled) }
+    }
+
     private func storedBool(forKey key: String) -> Bool {
         guard defaults.object(forKey: key) != nil else {
             return true
@@ -40,5 +50,6 @@ final class StoredChoices: DeskChoices {
         static let photoEnabled = "deskwarden.photoEnabled"
         static let coverTitle = "deskwarden.coverTitle"
         static let coverDetail = "deskwarden.coverDetail"
+        static let protectiveBlurEnabled = "deskwarden.protectiveBlurEnabled"
     }
 }
